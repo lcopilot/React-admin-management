@@ -11,7 +11,6 @@ export default function App() {
           <Route path='/login' component={Login}></Route>
           <Route path='/' component={Admin}></Route>
         </Switch>
-
       </BrowserRouter>
   )
 }

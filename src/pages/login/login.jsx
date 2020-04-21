@@ -1,7 +1,11 @@
-import React, {useMemo, useState} from "react";
-import {Form, Input, Button} from "antd";
+import React, { useState} from "react";
+import {Form, Input, Button, message} from "antd";
 import './login.less'
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import {UserOutlined, LockOutlined} from '@ant-design/icons';
+import *as userApi from '../../api/page/user'
+import { useHistory } from "react-router-dom";
+import memoryUtils from "../../utils/memoryUtils";
+import storageUtils from "../../utils/storageUtils";
 
 /**
  * 登录的路由组件
@@ -9,83 +13,36 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
  * @constructor
  */
 
-function validatePrimeUserName(userName) {
-  const regular=/^[0-9a-zA-Z_]{1,}$/
-  if (regular.test(userName) && null!=userName && userName.length<=12) {
-    return {
-      value:userName,
-      validateStatus: 'success',
-      errorMsg: null,
-    };
+
+const Login = () => {
+  let history = useHistory();
+  //如果用户已登录
+  const user = memoryUtils.user
+  if(user && user._id){
+    history.replace("/")
   }
-  return {
-    value:'',
-    validateStatus: 'error',
-    errorMsg: '请输入正确的格式!',
-  };
-}
 
 
-
-const Login=() =>{
-
-  const [userName, setUserName] = useState({
-    value: null,
-  });
-  const [password, setPassword] = useState({
-    value: null,
-  });
   const [loading, setLoading] = useState({
     loading: false,
-    loadingContent: '登录',});
+    loadingContent: '登录',
+  });
 
-  const onUserNameChange = e => {
-    setUserName({
-      ...validatePrimeUserName(e.target.value)
-    });
-  };
-
-  const onPasswordChange= e => {
-    setPassword({
-      ...validatePrimeUserName(e.target.value),
-      e,
-    });
-  };
-
-
-  const  login = (from) => {
-    if (password.validateStatus==='success' && userName.validateStatus==='success'){
-      console.log(userName.value+"----------"+password.value)
-      setLoading({ loading: true, loadingContent:'登录中 . . .'});
-      setTimeout(() => {
-        setLoading({loading: false,loadingContent:'登录' });
-      }, 8000);
-    }else if(userName.value===null){
-      setUserName({
-        validateStatus: 'error',
-        errorMsg: '请输入用户名!',value:null})
-    }else if(password.value===null){
-      setPassword({
-        validateStatus: 'error',
-        errorMsg: '请输入密码!',
-        value:null
-      })
-    }else if(userName.validateStatus==='error'){
-      setUserName({
-        value:'',
-        validateStatus: 'error',
-        errorMsg: '请输入正确的格式!',})
-    }else if(password.validateStatus==='error'){
-      setPassword({
-        value:'',
-        validateStatus: 'error',
-        errorMsg: '请输入正确的格式!',})
-    }
-
-  };
-
-  const onFinish =(values)=>{
-    console.log('Received values of form: ',values );
+  const login = (form) => {
+    setLoading({loading: true, loadingContent: '登录中 . . . '})
+    const {username, password} = form
+    userApi.login(username,password).then(res=>{
+      if (res.status===0){
+        message.success("登录成功!")
+        memoryUtils.user=res.data //保存在内存中
+        const user=res.data
+        storageUtils.saveUser(user)
+        history.replace("/");
+      }else {
+        message.error(res.msg)
+        setLoading({loading: false, loadingContent: '登录'})
+      }
+    })
   };
 
   return (
@@ -94,32 +51,35 @@ const Login=() =>{
           <h2>微利商城后台</h2>
           <Form
               name="normal_login"
-              initialValues={{ remember: true }}
-              onFinish={onFinish}
+              initialValues={{remember: true}}
+              onFinish={login}
           >
             <Form.Item
-                name="name"
-                validateStatus={userName.validateStatus}
-                help={userName.errorMsg}
+                name="username"
+                rules={[{required: true, whitespace: true, message: '请输入用户名 4-12位',min: 4,max: 12},
+                  {pattern: /^[a-zA-Z0-9_]+$/, message: '用户名必须是英文、数字或下划线组成'},]}
             >
-              <Input allowClear={true} prefix={<UserOutlined className="site-form-item-icon" />} value={userName.value} maxLength={12} onChange={onUserNameChange} placeholder="请输入用户名" />
+              <Input allowClear={true}
+                     prefix={<UserOutlined className="site-form-item-icon"/>}
+                     maxLength={12} placeholder="请输入用户名"/>
             </Form.Item>
 
             <Form.Item
                 name="password"
-                validateStatus={password.validateStatus}
-                help={password.errorMsg}
+                rules={[{required: true, whitespace: true, message: '请输入密码 4-12位',min: 4,max: 12},
+                  {pattern: /^[a-zA-Z0-9_]+$/, message: '密码必须是英文、数字或下划线组成'},]}
             >
               <Input.Password
-                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  prefix={<LockOutlined className="site-form-item-icon"/>}
                   placeholder="请输入密码"
                   allowClear={true}
-                  value={password.value} maxLength={12} onChange={onPasswordChange}
+                  maxLength={12}
               />
             </Form.Item>
 
-            <Form.Item >
-              <Button type="primary" loading={loading.loading} onClick={login} block>
+            <Form.Item>
+              <Button type="primary" loading={loading.loading} htmlType="submit"
+                      block>
                 {loading.loadingContent}
               </Button>
             </Form.Item>

@@ -1,5 +1,6 @@
 import React from "react";
-import {Button, message} from "antd";
+import memoryUtils from "../../utils/memoryUtils";
+import { useHistory } from "react-router-dom";
 
 /**
  * 管理的路由组件
@@ -7,11 +8,18 @@ import {Button, message} from "antd";
  * @constructor
  */
 
-export default function Admin() {
+ const Admin=()=> {
+   const  history=useHistory()
+  const user = memoryUtils.user
+
+  if(!user || !user._id){
+     history.replace("/login")
+  }
+
   return (<div>
-    Admin
+    hello {user.username}
   </div>)
 
-
-
 }
+
+export default Admin
