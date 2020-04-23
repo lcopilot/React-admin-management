@@ -169,7 +169,11 @@ const Statistics=()=>{
                   padding={"auto"}
                   scale={scale}
               >
-                <BTooltip   crosshairs={{
+
+                <BTooltip showTitle={false}
+                    itemTpl='<li data-index={index}>
+                  <span style="background-color:{color};width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px;"></span>
+                    {title} {value}</li>'  crosshairs={{
                   type: 'rect' || 'x' || 'y' || 'cross'}}/>
                 <Geom type="area" position="year*value" color="type" shape="smooth" />
               </Chart>
