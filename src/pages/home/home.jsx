@@ -1,8 +1,13 @@
 import React from "react";
 
-const Home=()=>{
+import './home.less'
+import Statistics from "../../components/home/statistics";
+
+const Home = () => {
   return (
-      <div>Home</div>
+      <>
+        <Statistics/>
+        </>
   )
 }
 

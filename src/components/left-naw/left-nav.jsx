@@ -1,4 +1,4 @@
-import React, {useEffect, useState,useContext} from "react";
+import React, { useState} from "react";
 import './left-nav.less'
 import {Menu} from "antd";
 import {Link} from 'react-router-dom'
@@ -21,7 +21,7 @@ const LeftNav = ({collapsed}) => {
   /*
   使用map() + 递归调用
   */
-  const  getMenuNodes_map=(menuList)=>{
+ /* const  getMenuNodes_map=(menuList)=>{
     return menuList.map(item=>{
       if (!item.children){
         return (
@@ -56,7 +56,7 @@ const LeftNav = ({collapsed}) => {
         )
       }
     })
-  }
+  }*/
   /*
   使用reduce() + 递归调用
   */
@@ -101,7 +101,7 @@ const LeftNav = ({collapsed}) => {
 
   // useEffect(()=>{
   //   setMenuNodes(getMenuNodes(menuList))
-  // },[openKey])
+  // })
 
   const menuNodes=getMenuNodes(menuList)
 

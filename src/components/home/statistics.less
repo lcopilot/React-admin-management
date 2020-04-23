@@ -1,0 +1,46 @@
+@title-span: {
+  position: relative;
+  span {
+    color: #999999;
+  }
+  .hint {
+    position: absolute;
+    top: .25rem;
+    right: 0;
+    line-height: 1;
+    cursor: pointer;
+  }
+}
+
+.home-yesterday {
+  .home-yesterday-title-span {
+    @title-span()
+  }
+  .ant-divider-horizontal {
+    margin: .5rem 0;
+  }
+  .ant-statistic-content {
+    font-size: 1.75rem;
+  }
+  @card();
+}
+
+@card: {
+  .ant-card-body {
+    padding-top: 1.2rem;
+    padding-bottom: .38rem;
+
+  }
+}
+
+.home-yesterday-graphics {
+  padding-top: 1.4rem;
+  height:3.18rem;
+  span {
+    margin-right: .5rem;
+  }
+
+  .anticon {
+    color: #f5222d !important;
+  }
+}

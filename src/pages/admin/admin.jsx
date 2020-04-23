@@ -6,7 +6,6 @@ import HeaderNav from "../../components/header/header";
 import {GithubOutlined} from "@ant-design/icons";
 import './admin.less'
 import {
-  BrowserRouter,
   Switch,
   Route,
   Redirect,
@@ -73,11 +72,14 @@ const Admin = () => {
           </Content>
           <Footer>
             <div className="footer">
-              <a href="https://github.com/liumuge">MuGe</a>
-              <a href="https://github.com/liumuge/SmallProfitMall">
-                <GithubOutlined/>
-              </a>
-              <a href="https://github.com/fhx210114">FF</a>
+              <div>
+                <a href="https://github.com/liumuge">MuGe</a>
+                <a href="https://github.com/liumuge/SmallProfitMall">
+                  <GithubOutlined/>
+                </a>
+                <a href="https://github.com/fhx210114">FF</a>
+              </div>
+              <div>A world that knows nothing will surprise you if you go on</div>
             </div>
           </Footer>
         </Layout>
