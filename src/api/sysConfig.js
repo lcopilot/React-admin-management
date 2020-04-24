@@ -1,6 +1,7 @@
 const sysConfig = {
     //开发时的接口前缀
     smApiUrlPre: '/apiUrl',
+    weatherAPi:'/weatherAPi',
     //后端接口地址
     smApiUrl: 'http://api.smallProfit.com/',
     //图片地址

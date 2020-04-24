@@ -7,12 +7,12 @@ import {
 import React from "react";
 import './statistics.less'
 import DataSet from "@antv/data-set";
-import {Tooltip as BTooltip, Chart, Geom, Legend} from "bizcharts";
+import {Tooltip as BTooltip, Chart, Geom, Legend, Axis} from "bizcharts";
 
 
 
 const Statistics=()=>{
-  var data = [
+  const data = [
     {
       year: "1986",
       ACME: 162,
@@ -106,8 +106,8 @@ const Statistics=()=>{
 
     }
   ];
-  var dv = new DataSet.View().source(data);
-  dv.transform({
+  const viewsFig = new DataSet.View().source(data);
+  viewsFig.transform({
     type: "fold",
     fields: ["ACME"],
     key: "type",
@@ -120,8 +120,58 @@ const Statistics=()=>{
       }
     },
   };
-
-
+  const data1 = [
+    {
+      year: "1951 年",
+      sales: 38
+    },
+    {
+      year: "1952 年",
+      sales: 52
+    },
+    {
+      year: "1956 年",
+      sales: 61
+    },
+    {
+      year: "1957 年",
+      sales: 145
+    },
+    {
+      year: "1968 年",
+      sales: 48
+    },
+    {
+      year: "1988 年",
+      sales: 48
+    },
+    {
+      year: "1958 年",
+      sales: 48
+    },
+    {
+      year: "1951 年",
+      sales: 48
+    },
+    {
+      year: "1999 年",
+      sales: 31
+    },
+    {
+      year: "1460 年",
+      sales: 442
+    },
+    {
+      year: "1962 年",
+      sales: 38
+    }
+  ];
+  const payFig = new DataSet.View().source(data1);
+  const cols = {
+    sales: {
+      tickInterval: 20
+    }
+  };
 
   return (
       <Row gutter={20} >
@@ -164,16 +214,15 @@ const Statistics=()=>{
             <div >
               <Chart
                   height={46}
-                  data={dv}
+                  data={viewsFig}
                   forceFit={true}
                   padding={"auto"}
                   scale={scale}
               >
-
                 <BTooltip showTitle={false}
                     itemTpl='<li data-index={index}>
                   <span style="background-color:{color};width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px;"></span>
-                    {title} {value}</li>'  crosshairs={{
+                  <span style="padding-right: 1rem;">{title}</span>{value}</li>'  crosshairs={{
                   type: 'rect' || 'x' || 'y' || 'cross'}}/>
                 <Geom type="area" position="year*value" color="type" shape="smooth" />
               </Chart>
@@ -195,13 +244,17 @@ const Statistics=()=>{
               </span>
             </div>
             <Statistic  value={112893} />
-            <div className="home-yesterday-graphics">
-              <span>
-                周同比 12% {React.createElement(true ? CaretUpOutlined : CaretDownOutlined)}
-              </span>
-              <span>
-                日同比 12% {React.createElement(false ? CaretUpOutlined : CaretDownOutlined )}
-              </span>
+            <div >
+              <Chart height={46} forceFit={true}
+                     padding={"auto"} data={payFig} scale={cols}>
+                <BTooltip showTitle={false}
+                          itemTpl='<li data-index={index}>
+                  <span style="background-color:{color};width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px;"></span>
+                  <span style="padding-right: 1rem;">{title}</span>{value}</li>'  crosshairs={{
+                  type: 'rect' || 'x' || 'y' || 'cross'}}
+                />
+                <Geom type="interval" position="year*sales" />
+              </Chart>
             </div>
             <Divider />
             <div>

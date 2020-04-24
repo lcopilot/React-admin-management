@@ -1,15 +1,23 @@
 import store from 'store'
 
 const USER_KEY = 'user_key'
+const WEATHER_KEY = 'weather_key'
 
 export default {
-  saveUser(user){
-    store.set(USER_KEY,user)
+  saveWeather(nowWeather) {
+    store.set(WEATHER_KEY, nowWeather)
   },
-  getUser(){
+  getWeather() {
+    return store.get(WEATHER_KEY) || ''
+  },
+
+  saveUser(user) {
+    store.set(USER_KEY, user)
+  },
+  getUser() {
     return store.get(USER_KEY) || {}
   },
-  removeUser(){
+  removeUser() {
     store.remove(USER_KEY)
     // store.clearAll();
   }
