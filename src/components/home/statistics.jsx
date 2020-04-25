@@ -172,6 +172,62 @@ const Statistics=()=>{
       tickInterval: 20
     }
   };
+  const data2 = [
+    {
+      month: "2015-01-01",
+      acc: 67.0
+    },
+    {
+      month: "2015-02-01",
+      acc: 14.9
+    },
+    {
+      month: "2015-03-01",
+      acc: 17.0
+    },
+    {
+      month: "2015-04-01",
+      acc: 20.2
+    },
+    {
+      month: "2015-05-01",
+      acc: 55.6
+    },
+    {
+      month: "2015-06-01",
+      acc: 56.7
+    },
+    {
+      month: "2015-07-01",
+      acc: 30.6
+    },
+    {
+      month: "2015-08-01",
+      acc: 63.2
+    },
+    {
+      month: "2015-09-01",
+      acc: 24.6
+    },
+    {
+      month: "2015-10-01",
+      acc: 14.0
+    },
+    {
+      month: "2015-11-01",
+      acc: 9.4
+    },
+    {
+      month: "2015-12-01",
+      acc: 6.3
+    }
+  ];
+  const userFig = new DataSet.View().source(data2);
+  const cols1 = {
+    acc: {
+      alias: "活跃量"
+    }
+  };
 
   return (
       <Row gutter={20} >
@@ -180,7 +236,7 @@ const Statistics=()=>{
             <div className="home-yesterday-title-span">
               <span>总销售额</span>
               <span className="hint">
-                <Tooltip placement="top" title="昨日销售额">
+                <Tooltip placement="top" title={<>总销售额</>}>
                   <ExclamationCircleOutlined/>
                 </Tooltip>
               </span>
@@ -203,9 +259,9 @@ const Statistics=()=>{
         <Col span={6}>
           <Card className="home-yesterday">
             <div className="home-yesterday-title-span">
-              <span>访问量</span>
+              <span>30天访问量</span>
               <span className="hint">
-                <Tooltip placement="top" title="访问量">
+                <Tooltip placement="top" title={<>近30天平台访问量<br/>图表为近30天每日访问量</>}>
                   <ExclamationCircleOutlined/>
                 </Tooltip>
               </span>
@@ -238,7 +294,7 @@ const Statistics=()=>{
             <div className="home-yesterday-title-span">
               <span>支付笔数</span>
               <span className="hint">
-                <Tooltip placement="top" title="昨日销售额">
+                <Tooltip placement="top" title={<>总支付数<br/>图表为近30天每日支付数</>}>
                   <ExclamationCircleOutlined/>
                 </Tooltip>
               </span>
@@ -258,32 +314,44 @@ const Statistics=()=>{
             </div>
             <Divider />
             <div>
-              日销售额 ￥<span>12,423</span>
+              日支付数 <span>12,423</span>
             </div>
           </Card>
         </Col>
         <Col span={6}>
           <Card className="home-yesterday">
             <div className="home-yesterday-title-span">
-              <span>昨日销售额</span>
+              <span>总用户量</span>
               <span className="hint">
-                <Tooltip placement="top" title="昨日销售额">
+                <Tooltip placement="topRight" title={<>总用户量<br/>图表为近30天用户活跃量</>}>
                   <ExclamationCircleOutlined/>
                 </Tooltip>
               </span>
             </div>
             <Statistic  value={112893}/>
-            <div className="home-yesterday-graphics">
-              <span>
-                周同比 12% {React.createElement(true ? CaretUpOutlined : CaretDownOutlined)}
-              </span>
-              <span>
-                日同比 12% {React.createElement(false ? CaretUpOutlined : CaretDownOutlined )}
-              </span>
+            <div >
+              <Chart height={46} data={userFig} scale={cols1} forceFit={true}
+                     padding={"auto"} >
+                <BTooltip crosshairs={{
+                  type: 'rect' || 'x' || 'y' || 'cross'}} />
+                <Geom
+                    type="line"
+                    position="month*acc"
+                    size={1}
+                     // 线性渐变，渐变角度为 270，渐变的起始点颜色 rgba(215, 236, 173, 1)，中点的渐变色为 rgba(150, 211, 147, 1)，结束的渐变色为 rgba(94, 144, 103, 1)
+                    color="l (270) 0:rgba(215, 236, 173, 1) .3:rgba(150, 211, 147, 1) .5:rgba(110, 189, 123, 1) .7:rgba(105, 186, 120,1) 1:rgba(94, 144, 103, 1)"
+                    shape="smooth"
+                    style={{
+                      shadowColor: "l (270) 0:rgba(21, 146, 255, 0)",
+                      shadowBlur: 60,
+                      shadowOffsetY: 6
+                    }}
+                />
+              </Chart>
             </div>
             <Divider/>
             <div>
-              日销售额 ￥<span>12,423</span>
+              日活跃量 <span>12,423</span>
             </div>
           </Card>
         </Col>

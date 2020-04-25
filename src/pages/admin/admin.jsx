@@ -1,5 +1,4 @@
 import React, {createContext, useState} from "react";
-import memoryUtils from "../../utils/memoryUtils";
 import {Layout} from "antd";
 import LeftNav from "../../components/left-naw/left-nav";
 import HeaderNav from "../../components/header/header";
@@ -19,13 +18,13 @@ import Home from "../home/home";
 import Monitor from "../dashboard/monitor";
 import Analysis from "../dashboard/analysis";
 import Order from "../order/order";
-
+import {connect} from 'react-redux'
 export const CountContext = createContext();
 const {Footer, Sider, Content} = Layout;
 
-const Admin = () => {
+const Admin = (props) => {
   const history = useHistory()
-  const user = memoryUtils.user
+  let {user} =props
 
   if (!user || !user._id) {
     history.replace("/login")
@@ -88,4 +87,11 @@ const Admin = () => {
 
 }
 
-export default Admin
+const stateToProps=(state)=>{
+  return {
+    user:state.user,
+  }
+}
+
+
+export default connect(stateToProps,null)(Admin);

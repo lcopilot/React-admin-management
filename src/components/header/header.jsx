@@ -1,6 +1,15 @@
 import React, {useContext, useEffect, useState} from 'react'
 import './header.less'
-import {Avatar, Modal, Tabs, Dropdown, Layout, Menu, Badge} from 'antd';
+import {
+  Avatar,
+  Modal,
+  Tabs,
+  Dropdown,
+  Layout,
+  Menu,
+  Badge,
+  Tooltip
+} from 'antd';
 import {
   MenuUnfoldOutlined,
   ExclamationCircleOutlined,
@@ -10,26 +19,27 @@ import {
   MenuFoldOutlined
 } from '@ant-design/icons';
 import {CountContext} from '../../pages/admin/admin'
-import memoryUtils from "../../utils/memoryUtils";
 import {useHistory} from "react-router-dom";
 import storageUtils from "../../utils/storageUtils";
 import NowDate from "../../utils/dateUtils";
 import *as commApi from '../../api/page/comm'
 import moment from "moment";
-
+import {connect} from 'react-redux'
+import * as ActionCreators from "../../store/actionCreators";
 
 const {Header} = Layout;
 const {TabPane} = Tabs;
 const {confirm} = Modal;
 
-const HeaderNav = () => {
+const HeaderNav = (props) => {
 
   const history = useHistory();
   const {collapsed, setCollapsed} = useContext(CountContext);
   const [bell, setBell] = useState({notice: 10, message: 5, commission: 9})
-  const [weather, setWeather] = useState({cond:{txt:"晴"},tmp:"20"})
-  const user=memoryUtils.user;
-  let weatherTimer=0
+  const [weather, setWeather] = useState(
+      {now: {cond: {txt: "晴"}, tmp: "20"}, basic: {city: '长沙',update:{loc:''}}})
+  let {user, setUser} = props
+  let weatherTimer = 0
 
   const trigger = () => {
     setCollapsed(!collapsed)
@@ -44,43 +54,53 @@ const HeaderNav = () => {
       okText: '确定',
       onOk() {
         storageUtils.removeUser()
-        memoryUtils.user = {};
+        setUser({});
         history.replace("/login");
       },
     });
 
   };
   //获取天气
-  const getWeather=()=>{
-    (async ()=>{
+  const getWeather = () => {
+    (async () => {
       commApi.getWeather().then(res => {
-        storageUtils.saveWeather(res.result.HeWeather5[0].now);
-        setWeather(storageUtils.getWeather())
+        if (res.result.HeWeather5[0].status === 'ok') {
+          storageUtils.saveWeather(res.result.HeWeather5[1]);
+          setWeather(storageUtils.getWeather())
+        }
       });
     })();
   }
-  const startWeather =() => {
-   const weather=storageUtils.getWeather()
-   if (!weather){
-     getWeather();
-     weatherTimer=setTimeout(()=>{
-       getWeather();
-     },moment(new Date()).add(1, 'H').set({minute:'01',second:'00',millisecond:'000'})-moment(new Date()))
-   }else {
-     setWeather(storageUtils.getWeather())
-     weatherTimer=setTimeout(()=>{
+  const startWeather = () => {
+    const weather = storageUtils.getWeather()
+    if (!weather) {
+      getWeather();
+      weatherTimer = setTimeout(() => {
         getWeather();
-      },moment(new Date()).add(1, 'H').set({minute:'01',second:'00',millisecond:'000'})-moment(new Date()))
-   }
+      }, moment(new Date()).add(1, 'H').set(
+          {minute: '01', second: '00', millisecond: '000'}) - moment(
+          new Date()))
+    } else {
+      setWeather(storageUtils.getWeather())
+      if ((moment(new Date()).add(1, 'H').set(
+          {minute: '01', second: '00', millisecond: '000'}) - moment(
+          new Date())) > 3600000) {
+        getWeather();
+      }
+      weatherTimer = setTimeout(() => {
+        getWeather();
+      }, moment(new Date()).add(1, 'H').set(
+          {minute: '01', second: '00', millisecond: '000'}) - moment(
+          new Date()))
+    }
   };
 
   useEffect(() => {
     startWeather();
-    return ()=>{
+    return () => {
       clearTimeout(weatherTimer)
     }
-  },[]);
-
+  }, []);
 
   const userMenu = (
       <Menu>
@@ -124,8 +144,10 @@ const HeaderNav = () => {
         </div>
         <div className="header-index-right">
           <div className="header-weather">
-            <span>{weather.cond.txt} </span>
-            <span>{weather.tmp}℃</span>
+            <Tooltip placement="bottom" title={<>地点<span style={{marginLeft:'4rem'}}>{weather.basic.city}</span> <br/>更新时间<span style={{marginLeft:'2rem'}}> {weather.basic.update.loc}</span><br/>数据每小时更新一次</>}>
+              <span>{weather.now.cond.txt} </span>
+              <span>{weather.now.tmp}℃</span>
+            </Tooltip>
           </div>
           <div>
             <NowDate/>
@@ -146,9 +168,21 @@ const HeaderNav = () => {
             </div>
           </Dropdown>
         </div>
-
       </Header>
   )
 }
 
-export default HeaderNav
+const stateToProps = (state) => {
+  return {
+    user: state.user,
+  }
+}
+const dispatchToProps = (dispatch) => {
+  return {
+    setUser(data) {
+      dispatch(ActionCreators.setUser(data))
+    }
+  }
+}
+
+export default connect(stateToProps, dispatchToProps)(HeaderNav);

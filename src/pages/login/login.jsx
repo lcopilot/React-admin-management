@@ -4,8 +4,9 @@ import './login.less'
 import {UserOutlined, LockOutlined} from '@ant-design/icons';
 import *as userApi from '../../api/page/user'
 import { useHistory } from "react-router-dom";
-import memoryUtils from "../../utils/memoryUtils";
 import storageUtils from "../../utils/storageUtils";
+import {connect} from 'react-redux'
+import *as ActionCreators from '../../store/actionCreators'
 
 /**
  * 登录的路由组件
@@ -14,14 +15,13 @@ import storageUtils from "../../utils/storageUtils";
  */
 
 
-const Login = () => {
+const Login = (props) => {
   let history = useHistory();
   //如果用户已登录
-  const user = memoryUtils.user
+  let {user,setUser}=props
   if(user && user._id){
     history.replace("/")
   }
-
 
   const [loading, setLoading] = useState({
     loading: false,
@@ -34,8 +34,8 @@ const Login = () => {
     userApi.login(username,password).then(res=>{
       if (res.status===0){
         message.success("登录成功!")
-        memoryUtils.user=res.data //保存在内存中
         const user=res.data
+        setUser(user)
         storageUtils.saveUser(user)
         history.replace("/");
       }else {
@@ -87,7 +87,21 @@ const Login = () => {
         </div>
       </div>
   )
-
 }
 
-export default Login
+const stateToProps=(state)=>{
+  return {
+    user:state.user,
+  }
+}
+
+const dispatchToProps=(dispatch)=>{
+  return{
+    setUser(data){
+      dispatch(ActionCreators.setUser(data))
+    }
+  }
+}
+
+
+export default connect(stateToProps,dispatchToProps)(Login);

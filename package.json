@@ -14,14 +14,18 @@
     "bizcharts": "^3.5.8",
     "customize-cra": "^0.9.1",
     "http-proxy-middleware": "^1.0.3",
+    "immutability-helper": "^3.0.2",
     "less": "^3.11.1",
     "less-loader": "^5.0.0",
     "moment": "^2.24.0",
     "react": "^16.13.1",
     "react-app-rewired": "^2.1.5",
     "react-dom": "^16.13.1",
+    "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
     "store": "^2.0.12"
   },
   "scripts": {
