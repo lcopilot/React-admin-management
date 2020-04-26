@@ -1,4 +1,4 @@
-import React, {createContext, useState} from "react";
+import React, {createContext, useEffect, useState} from "react";
 import {Layout} from "antd";
 import LeftNav from "../../components/left-naw/left-nav";
 import HeaderNav from "../../components/header/header";
@@ -18,6 +18,8 @@ import Home from "../home/home";
 import Monitor from "../dashboard/monitor";
 import Analysis from "../dashboard/analysis";
 import Order from "../order/order";
+
+
 import {connect} from 'react-redux'
 export const CountContext = createContext();
 const {Footer, Sider, Content} = Layout;
@@ -30,12 +32,34 @@ const Admin = (props) => {
     history.replace("/login")
   }
   const [collapsed, setCollapsed] = useState(false)
+  const [collapsedLNav, setCollapsedLNav] = useState(true)
+
+  const collapsedNav=()=>{
+    const width=document.body.clientWidth || document.documentElement.clientWidth
+    if(width<=700){
+     return  setCollapsedLNav(false)
+    }
+    setCollapsedLNav(true)
+    if(width<=1200){
+     return  setCollapsed(true)
+    }
+    setCollapsed(false)
+  }
+
+  useEffect(()=>{
+    window.addEventListener('resize', collapsedNav)
+    return ()=>{
+      window.removeEventListener('resize', collapsedNav)
+    }
+  })
 
   return (
-      <Layout style={{height: '100%'}}>
-        <Sider trigger={null} collapsible collapsed={collapsed}>
-          <LeftNav collapsed={collapsed}/>
-        </Sider>
+      <Layout className="admin">
+        {
+          collapsedLNav?<Sider  trigger={null} collapsible={true}  breakpoint="xl" collapsed={collapsed} onBreakpoint={collapsedNav}>
+            <LeftNav collapsed={collapsed}/>
+          </Sider>:null
+        }
         <Layout>
           <CountContext.Provider value={{collapsed, setCollapsed}}>
             <HeaderNav/>

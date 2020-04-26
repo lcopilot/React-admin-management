@@ -9,9 +9,7 @@ import './statistics.less'
 import DataSet from "@antv/data-set";
 import {Tooltip as BTooltip, Chart, Geom, Legend, Axis} from "bizcharts";
 
-
-
-const Statistics=()=>{
+const Statistics = () => {
   const data = [
     {
       year: "1986",
@@ -115,8 +113,8 @@ const Statistics=()=>{
   });
   const scale = {
     value: {
-      formatter: function(val) {
-        return  val;
+      formatter: function (val) {
+        return val;
       }
     },
   };
@@ -230,8 +228,8 @@ const Statistics=()=>{
   };
 
   return (
-      <Row gutter={20} >
-        <Col span={6}>
+      <Row gutter={20}>
+        <Col xs={24} sm={24} md={12} lg={12} xl={6}>
           <Card className="home-yesterday">
             <div className="home-yesterday-title-span">
               <span>总销售额</span>
@@ -241,33 +239,36 @@ const Statistics=()=>{
                 </Tooltip>
               </span>
             </div>
-            <Statistic  value={112893} prefix="￥"/>
+            <Statistic value={112893} prefix="￥"/>
             <div className="home-yesterday-graphics">
-              <span>
-                周同比 12% {React.createElement(true ? CaretUpOutlined : CaretDownOutlined)}
-              </span>
-              <span>
-                日同比 12% {React.createElement(false ? CaretUpOutlined : CaretDownOutlined )}
-              </span>
+              <Row>
+                <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+                  周同比 12% {React.createElement(
+                    true ? CaretUpOutlined : CaretDownOutlined)}</Col>
+                <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+                  日同比 12% {React.createElement(
+                    false ? CaretUpOutlined : CaretDownOutlined)}</Col>
+              </Row>
             </div>
-            <Divider />
+            <Divider/>
             <div>
               日销售额 ￥<span>12,423</span>
             </div>
           </Card>
         </Col>
-        <Col span={6}>
+        <Col xs={24} sm={24} md={12} lg={12} xl={6}>
           <Card className="home-yesterday">
             <div className="home-yesterday-title-span">
               <span>30天访问量</span>
               <span className="hint">
-                <Tooltip placement="top" title={<>近30天平台访问量<br/>图表为近30天每日访问量</>}>
+                <Tooltip placement="top"
+                         title={<>近30天平台访问量<br/>图表为近30天每日访问量</>}>
                   <ExclamationCircleOutlined/>
                 </Tooltip>
               </span>
             </div>
-            <Statistic  value={20190415}/>
-            <div >
+            <Statistic value={20190415}/>
+            <div>
               <Chart
                   height={46}
                   data={viewsFig}
@@ -276,20 +277,23 @@ const Statistics=()=>{
                   scale={scale}
               >
                 <BTooltip showTitle={false}
-                    itemTpl='<li data-index={index}>
+                          itemTpl='<li data-index={index}>
                   <span style="background-color:{color};width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px;"></span>
-                  <span style="padding-right: 1rem;">{title}</span>{value}</li>'  crosshairs={{
-                  type: 'rect' || 'x' || 'y' || 'cross'}}/>
-                <Geom type="area" position="year*value" color="type" shape="smooth" />
+                  <span style="padding-right: 1rem;">{title}</span>{value}</li>'
+                          crosshairs={{
+                            type: 'rect' || 'x' || 'y' || 'cross'
+                          }}/>
+                <Geom type="area" position="year*value" color="type"
+                      shape="smooth"/>
               </Chart>
             </div>
-            <Divider />
+            <Divider/>
             <div>
               日访问量 <span>12,423</span>
             </div>
           </Card>
         </Col>
-        <Col span={6}>
+        <Col xs={24} sm={24} md={12} lg={12} xl={6}>
           <Card className="home-yesterday">
             <div className="home-yesterday-title-span">
               <span>支付笔数</span>
@@ -299,46 +303,50 @@ const Statistics=()=>{
                 </Tooltip>
               </span>
             </div>
-            <Statistic  value={112893} />
-            <div >
+            <Statistic value={112893}/>
+            <div>
               <Chart height={46} forceFit={true}
                      padding={"auto"} data={payFig} scale={cols}>
                 <BTooltip showTitle={false}
                           itemTpl='<li data-index={index}>
                   <span style="background-color:{color};width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px;"></span>
-                  <span style="padding-right: 1rem;">{title}</span>{value}</li>'  crosshairs={{
-                  type: 'rect' || 'x' || 'y' || 'cross'}}
+                  <span style="padding-right: 1rem;">{title}</span>{value}</li>'
+                          crosshairs={{
+                            type: 'rect' || 'x' || 'y' || 'cross'
+                          }}
                 />
-                <Geom type="interval" position="year*sales" />
+                <Geom type="interval" position="year*sales"/>
               </Chart>
             </div>
-            <Divider />
+            <Divider/>
             <div>
               日支付数 <span>12,423</span>
             </div>
           </Card>
         </Col>
-        <Col span={6}>
+        <Col xs={24} sm={24} md={12} lg={12} xl={6}>
           <Card className="home-yesterday">
             <div className="home-yesterday-title-span">
               <span>总用户量</span>
               <span className="hint">
-                <Tooltip placement="topRight" title={<>总用户量<br/>图表为近30天用户活跃量</>}>
+                <Tooltip placement="topRight"
+                         title={<>总用户量<br/>图表为近30天用户活跃量</>}>
                   <ExclamationCircleOutlined/>
                 </Tooltip>
               </span>
             </div>
-            <Statistic  value={112893}/>
-            <div >
+            <Statistic value={112893}/>
+            <div>
               <Chart height={46} data={userFig} scale={cols1} forceFit={true}
-                     padding={"auto"} >
+                     padding={"auto"}>
                 <BTooltip crosshairs={{
-                  type: 'rect' || 'x' || 'y' || 'cross'}} />
+                  type: 'rect' || 'x' || 'y' || 'cross'
+                }}/>
                 <Geom
                     type="line"
                     position="month*acc"
                     size={1}
-                     // 线性渐变，渐变角度为 270，渐变的起始点颜色 rgba(215, 236, 173, 1)，中点的渐变色为 rgba(150, 211, 147, 1)，结束的渐变色为 rgba(94, 144, 103, 1)
+                    // 线性渐变，渐变角度为 270，渐变的起始点颜色 rgba(215, 236, 173, 1)，中点的渐变色为 rgba(150, 211, 147, 1)，结束的渐变色为 rgba(94, 144, 103, 1)
                     color="l (270) 0:rgba(215, 236, 173, 1) .3:rgba(150, 211, 147, 1) .5:rgba(110, 189, 123, 1) .7:rgba(105, 186, 120,1) 1:rgba(94, 144, 103, 1)"
                     shape="smooth"
                     style={{

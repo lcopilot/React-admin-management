@@ -8,7 +8,7 @@ import {
   Layout,
   Menu,
   Badge,
-  Tooltip
+  Tooltip, Drawer
 } from 'antd';
 import {
   MenuUnfoldOutlined,
@@ -26,6 +26,7 @@ import *as commApi from '../../api/page/comm'
 import moment from "moment";
 import {connect} from 'react-redux'
 import * as ActionCreators from "../../store/actionCreators";
+import LeftNav from "../left-naw/left-nav";
 
 const {Header} = Layout;
 const {TabPane} = Tabs;
@@ -35,13 +36,20 @@ const HeaderNav = (props) => {
 
   const history = useHistory();
   const {collapsed, setCollapsed} = useContext(CountContext);
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [collapsedLNav, setCollapsedLNav] = useState(true)
   const [bell, setBell] = useState({notice: 10, message: 5, commission: 9})
   const [weather, setWeather] = useState(
       {now: {cond: {txt: "晴"}, tmp: "20"}, basic: {city: '长沙',update:{loc:''}}})
   let {user, setUser} = props
   let weatherTimer = 0
 
+  //侧边栏的收缩
   const trigger = () => {
+    const width=document.body.clientWidth || document.documentElement.clientWidth
+    if(width<=700){
+      return  setDrawerVisible(true)
+    }
     setCollapsed(!collapsed)
   }
   //退出
@@ -65,12 +73,13 @@ const HeaderNav = (props) => {
     (async () => {
       commApi.getWeather().then(res => {
         if (res.result.HeWeather5[0].status === 'ok') {
-          storageUtils.saveWeather(res.result.HeWeather5[1]);
+          storageUtils.saveWeather(res.result.HeWeather5[0]);
           setWeather(storageUtils.getWeather())
         }
       });
     })();
   }
+  //天气计时器
   const startWeather = () => {
     const weather = storageUtils.getWeather()
     if (!weather) {
@@ -84,7 +93,7 @@ const HeaderNav = (props) => {
       setWeather(storageUtils.getWeather())
       if ((moment(new Date()).add(1, 'H').set(
           {minute: '01', second: '00', millisecond: '000'}) - moment(
-          new Date())) > 3600000) {
+          weather.basic.update.loc)) > 3600000) {
         getWeather();
       }
       weatherTimer = setTimeout(() => {
@@ -95,10 +104,22 @@ const HeaderNav = (props) => {
     }
   };
 
+  const collapsedNav=()=>{
+    const width=document.body.clientWidth || document.documentElement.clientWidth
+    if(width<=700 && collapsedLNav){
+      return  setCollapsedLNav(false)
+    }
+    setDrawerVisible(false);
+    setCollapsedLNav(true)
+  }
+
   useEffect(() => {
+    collapsedNav();
+    window.addEventListener('resize', collapsedNav)
     startWeather();
     return () => {
       clearTimeout(weatherTimer)
+      window.removeEventListener('resize', collapsedNav)
     }
   }, []);
 
@@ -133,6 +154,10 @@ const HeaderNav = (props) => {
         </div>
       </Menu>
   );
+
+  const drawerClose=()=> {
+    setDrawerVisible(false);
+  }
   return (
       <Header className="header">
         <div>
@@ -142,15 +167,32 @@ const HeaderNav = (props) => {
                 onClick: trigger,
               })}
         </div>
+        <Drawer
+            className="header-drawer"
+            title="更多"
+            drawerStyle={{ backgroundColor:'#001529'}}
+            closable={false}
+            onClose={drawerClose}
+            placement="left"
+            visible={drawerVisible}
+        >
+          <LeftNav collapsed={false}/>
+        </Drawer>
         <div className="header-index-right">
-          <div className="header-weather">
-            <Tooltip placement="bottom" title={<>地点<span style={{marginLeft:'4rem'}}>{weather.basic.city}</span> <br/>更新时间<span style={{marginLeft:'2rem'}}> {weather.basic.update.loc}</span><br/>数据每小时更新一次</>}>
-              <span>{weather.now.cond.txt} </span>
-              <span>{weather.now.tmp}℃</span>
-            </Tooltip>
-          </div>
+          {
+            collapsedLNav?<div className="header-weather">
+              <Tooltip placement="bottom" title={<>地点<span style={{marginLeft:'4rem'}}>{weather.basic.city}</span> <br/>更新时间<span style={{marginLeft:'2rem'}}> {weather.basic.update.loc}</span><br/>数据由京东万象提供每小时更新一次</>}>
+                <span>{weather.now.cond.txt} </span>
+                <span>{weather.now.tmp}℃</span>
+              </Tooltip>
+            </div>:null
+          }
+
           <div>
-            <NowDate/>
+            {
+            collapsedLNav?<NowDate/>:null
+          }
+
           </div>
           <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
             <div className="header-message-icon">
