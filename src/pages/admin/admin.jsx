@@ -56,9 +56,9 @@ const Admin = (props) => {
   return (
       <Layout className="admin">
         {
-          collapsedLNav?<Sider  trigger={null} collapsible={true}  breakpoint="xl" collapsed={collapsed} onBreakpoint={collapsedNav}>
+          collapsedLNav?<Sider  trigger={null}  collapsible={true}  breakpoint="xl" collapsed={collapsed} onBreakpoint={collapsedNav}>
             <LeftNav collapsed={collapsed}/>
-          </Sider>:null
+          </Sider>:<Sider style={{ display:'none'}}/>
         }
         <Layout>
           <CountContext.Provider value={{collapsed, setCollapsed}}>
