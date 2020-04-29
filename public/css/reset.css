@@ -177,11 +177,42 @@ template {
 [hidden] {
   display: none;
 }
-#root{
+
+#root {
   height: 100%;
   width: 100%;
 }
-html,body{
+
+html, body {
   width: 100%;
   height: 100%;
 }
+html{
+  font-size: 62.5%;
+}
+
+
+/*@media screen and (min-width: 0px) and (max-width: 576px){*/
+/*  html {*/
+/*    font-size: 13px;*/
+/*  }*/
+/*}*/
+
+/*@media screen and (min-width: 576px) and (max-width: 768px){*/
+/*  html {*/
+/*    font-size: 80%;*/
+/*  }*/
+/*}*/
+
+/*@media screen and (min-width: 768px) and (max-width: 992px){*/
+/*  html {*/
+/*    font-size: 90%;*/
+/*  }*/
+/*}*/
+
+/*@media screen and (min-width: 992px) and (max-width: 1200px) {*/
+/*  html {*/
+/*    font-size: 100%;*/
+/*  }*/
+/*}*/
+

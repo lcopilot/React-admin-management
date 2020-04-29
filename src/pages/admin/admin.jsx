@@ -19,47 +19,42 @@ import Monitor from "../dashboard/monitor";
 import Analysis from "../dashboard/analysis";
 import Order from "../order/order";
 
-
 import {connect} from 'react-redux'
+
 export const CountContext = createContext();
 const {Footer, Sider, Content} = Layout;
 
 const Admin = (props) => {
   const history = useHistory()
-  let {user} =props
+  let {user} = props
 
   if (!user || !user._id) {
     history.replace("/login")
   }
   const [collapsed, setCollapsed] = useState(false)
-  const [collapsedLNav, setCollapsedLNav] = useState(true)
 
-  const collapsedNav=()=>{
-    const width=document.body.clientWidth || document.documentElement.clientWidth
-    if(width<=700){
-     return  setCollapsedLNav(false)
-    }
-    setCollapsedLNav(true)
-    if(width<=1200){
-     return  setCollapsed(true)
+  const collapsedNav = () => {
+    const width = document.body.clientWidth
+        || document.documentElement.clientWidth
+    if (width <= 1200) {
+      return setCollapsed(true)
     }
     setCollapsed(false)
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     window.addEventListener('resize', collapsedNav)
-    return ()=>{
+    return () => {
       window.removeEventListener('resize', collapsedNav)
     }
   })
 
   return (
       <Layout className="admin">
-        {
-          collapsedLNav?<Sider  trigger={null}  collapsible={true}  breakpoint="xl" collapsed={collapsed} onBreakpoint={collapsedNav}>
-            <LeftNav collapsed={collapsed}/>
-          </Sider>:<Sider style={{ display:'none'}}/>
-        }
+        <Sider trigger={null} collapsible={true} collapsed={collapsed}
+               className="admin-sider">
+          <LeftNav collapsed={collapsed}/>
+        </Sider>
         <Layout>
           <CountContext.Provider value={{collapsed, setCollapsed}}>
             <HeaderNav/>
@@ -102,7 +97,8 @@ const Admin = (props) => {
                 </a>
                 <a href="https://github.com/fhx210114">FF</a>
               </div>
-              <div>A world that knows nothing will surprise you if you go on</div>
+              <div>A world that knows nothing will surprise you if you go on
+              </div>
             </div>
           </Footer>
         </Layout>
@@ -111,11 +107,10 @@ const Admin = (props) => {
 
 }
 
-const stateToProps=(state)=>{
+const stateToProps = (state) => {
   return {
-    user:state.user,
+    user: state.user,
   }
 }
 
-
-export default connect(stateToProps,null)(Admin);
+export default connect(stateToProps, null)(Admin);

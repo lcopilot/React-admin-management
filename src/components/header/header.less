@@ -1,14 +1,14 @@
 .header {
-  height: 4rem;
+  height: 6.4rem;
   padding: 0;
   background-color: #ffffff;
   align-items: center;
   position: relative;
   display: flex;
-  box-shadow: 0 1px .5rem rgba(0, 21, 41, .08);
+  box-shadow: 0 1px .8rem rgba(0, 21, 41, .08);
   .anticon {
-    padding: 0 1rem ;
-    font-size: 1.4rem;
+    padding: 0 1.6rem ;
+    font-size: 2.24rem;
     cursor: pointer;
     transition: all .3s, padding 0s;
   }
@@ -18,23 +18,23 @@
     float: right;
     margin-left: auto;
     align-items: center;
-    margin-right: 2rem;
+    margin-right: 3.2rem;
     overflow: hidden;
     .header-index-user {
       display: flex;
       align-items: center;
       height: 100%;
-      padding: 0 .4rem;
+      padding: 0 .64rem;
       cursor: pointer;
       transition: all .3s;
       span{
-        margin-right: .8rem;
+        margin-right: 1.28rem;
       }
     }
     .header-weather{
-      padding: 0 1rem;
+      padding: 0 1.6rem;
       span{
-        padding: 0 .5rem 0 0;
+        padding: 0 .8rem 0 0;
       }
     }
   }
@@ -42,10 +42,10 @@
 }
 .header-message{
   text-align: center;
-  width: 21rem;
+  width: 33.6rem;
 }
 .header-message-icon{
-  padding: 0 1rem;
+  padding: 0 1.6rem;
 }
 
 .ant-layout-header {
@@ -57,5 +57,16 @@
   }
   .ant-drawer-body{
     padding: 0;
+  }
+}
+@media screen and (max-width: 700px){
+  .header-nowDate{
+    display: none;
+  }
+  .header-weather{
+    display: none;
+  }
+  .header-message{
+    width: 21rem;
   }
 }

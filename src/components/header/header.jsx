@@ -40,15 +40,19 @@ const HeaderNav = (props) => {
   const [collapsedLNav, setCollapsedLNav] = useState(true)
   const [bell, setBell] = useState({notice: 10, message: 5, commission: 9})
   const [weather, setWeather] = useState(
-      {now: {cond: {txt: "晴"}, tmp: "20"}, basic: {city: '长沙',update:{loc:''}}})
+      {
+        now: {cond: {txt: "晴"}, tmp: "20"},
+        basic: {city: '长沙', update: {loc: ''}}
+      })
   let {user, setUser} = props
   let weatherTimer = 0
 
   //侧边栏的收缩
   const trigger = () => {
-    const width=document.body.clientWidth || document.documentElement.clientWidth
-    if(width<=700){
-      return  setDrawerVisible(true)
+    const width = document.body.clientWidth
+        || document.documentElement.clientWidth
+    if (width <= 700) {
+      return setDrawerVisible(true)
     }
     setCollapsed(!collapsed)
   }
@@ -104,22 +108,10 @@ const HeaderNav = (props) => {
     }
   };
 
-  const collapsedNav=()=>{
-    const width=document.body.clientWidth || document.documentElement.clientWidth
-    if(width<=700 && collapsedLNav){
-      return  setCollapsedLNav(false)
-    }
-    setDrawerVisible(false);
-    setCollapsedLNav(true)
-  }
-
   useEffect(() => {
-    collapsedNav();
-    window.addEventListener('resize', collapsedNav)
     startWeather();
     return () => {
       clearTimeout(weatherTimer)
-      window.removeEventListener('resize', collapsedNav)
     }
   }, []);
 
@@ -155,9 +147,10 @@ const HeaderNav = (props) => {
       </Menu>
   );
 
-  const drawerClose=()=> {
+  const drawerClose = () => {
     setDrawerVisible(false);
   }
+
   return (
       <Header className="header">
         <div>
@@ -170,7 +163,7 @@ const HeaderNav = (props) => {
         <Drawer
             className="header-drawer"
             title="更多"
-            drawerStyle={{ backgroundColor:'#001529'}}
+            drawerStyle={{backgroundColor: '#001529'}}
             closable={false}
             onClose={drawerClose}
             placement="left"
@@ -179,20 +172,17 @@ const HeaderNav = (props) => {
           <LeftNav collapsed={false}/>
         </Drawer>
         <div className="header-index-right">
-          {
-            collapsedLNav?<div className="header-weather">
-              <Tooltip placement="bottom" title={<>地点<span style={{marginLeft:'4rem'}}>{weather.basic.city}</span> <br/>更新时间<span style={{marginLeft:'2rem'}}> {weather.basic.update.loc}</span><br/>数据由京东万象提供每小时更新一次</>}>
-                <span>{weather.now.cond.txt} </span>
-                <span>{weather.now.tmp}℃</span>
-              </Tooltip>
-            </div>:null
-          }
+          <div className="header-weather">
+            <Tooltip placement="bottom" title={<>地点<span
+                style={{marginLeft: '4rem'}}>{weather.basic.city}</span> <br/>更新时间<span
+                style={{marginLeft: '2rem'}}> {weather.basic.update.loc}</span><br/>数据由京东万象提供每小时更新一次</>}>
+              <span>{weather.now.cond.txt} </span>
+              <span>{weather.now.tmp}℃</span>
+            </Tooltip>
+          </div>
 
-          <div>
-            {
-            collapsedLNav?<NowDate/>:null
-          }
-
+          <div className="header-nowDate">
+            <NowDate/>
           </div>
           <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
             <div className="header-message-icon">
