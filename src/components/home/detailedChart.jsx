@@ -1,4 +1,14 @@
-import {Badge, Button, Card, Col, DatePicker, List, Row, Tabs} from "antd";
+import {
+  Badge,
+  Button,
+  Card,
+  Col,
+  DatePicker,
+  List,
+  Row,
+  Skeleton,
+  Tabs
+} from "antd";
 import React, {useState} from "react";
 import {Axis, Chart, Geom, Tooltip as BTooltip} from "bizcharts";
 import DataSet from "@antv/data-set";
@@ -12,28 +22,28 @@ moment.locale('zh-cn');
 const {TabPane} = Tabs
 const {RangePicker} = DatePicker;
 
-const Detailed=()=>{
+const Detailed = () => {
 
-  const [startTime, setSTime] = useState('2019/04/15');
-  const [endTime, setETime] = useState('2020/04/27');
+  const [startTime, setSTime] = useState(moment().startOf('year'));
+  const [endTime, setETime] = useState(moment());
 
-  const setTime=(type)=>{
-    if (type===1){
+  const setTime = (type) => {
+    if (type === 1) {
       setSTime(moment());
       setETime(moment());
-    }else if(type===2){
+    } else if (type === 2) {
       setSTime(moment().startOf('week'));
-      setETime(moment().endOf('week'));
-    }else if(type===3){
+      setETime(moment());
+    } else if (type === 3) {
       setSTime(moment().startOf('month'));
-      setETime(moment().endOf('month'));
-    }else if (type===4){
+      setETime(moment());
+    } else if (type === 4) {
       setSTime(moment().startOf('year'));
-      setETime(moment().endOf('yaer'));
+      setETime(moment());
     }
   }
 
-  const timeChange=(time)=>{
+  const timeChange = (time) => {
     setSTime(moment(time[0]._d));
     setETime(moment(time[1]._d));
   }
@@ -42,34 +52,42 @@ const Detailed=()=>{
       <>
         <Row>
           <Col xs={0} sm={0} md={0} lg={3} xl={3}>
-            <Button type="dashed" onClick={()=>{setTime(1)}}>
+            <Button type="dashed" onClick={() => {
+              setTime(1)
+            }}>
               今天
             </Button>
           </Col>
           <Col xs={0} sm={0} md={0} lg={3} xl={3}>
-            <Button type="dashed" onClick={()=>{setTime(2)}}>
+            <Button type="dashed" onClick={() => {
+              setTime(2)
+            }}>
               本周
             </Button>
           </Col>
           <Col xs={0} sm={0} md={0} lg={3} xl={3}>
-            <Button type="dashed" onClick={()=>{setTime(3)}}>
+            <Button type="dashed" onClick={() => {
+              setTime(3)
+            }}>
               本月
             </Button>
           </Col>
           <Col xs={0} sm={0} md={0} lg={3} xl={3}>
-            <Button type="dashed" onClick={()=>{setTime(4)}}>
+            <Button type="dashed" onClick={() => {
+              setTime(4)
+            }}>
               本年
             </Button>
           </Col>
           <Col xs={0} sm={24} md={24} lg={12} xl={12}>
-            <RangePicker onChange={timeChange} value={[moment(startTime),moment(endTime)]}/>
+            <RangePicker onChange={timeChange}
+                         value={[moment(startTime), moment(endTime)]}/>
           </Col>
         </Row>
       </>
   );
 
-
-  const DetailedChart=()=>{
+  const DetailedChart = () => {
     const data1 = [
       {
         year: "1951 年",
@@ -133,7 +151,7 @@ const Detailed=()=>{
     ];
 
     return (
-        <Row  justify="center">
+        <Row justify="center">
           <Col xs={24} sm={24} md={24} lg={16} xl={16}>
             <div className="detailed-chart-columnar">
               <h4>销售趋势</h4>
@@ -141,7 +159,7 @@ const Detailed=()=>{
                      padding={"auto"} data={payFig} scale={cols}>
                 <Axis name="year"/>
                 <BTooltip/>
-                <Geom type="interval" position="year*sales" />
+                <Geom type="interval" position="year*sales"/>
               </Chart>
             </div>
           </Col>
@@ -150,9 +168,14 @@ const Detailed=()=>{
               <List
                   header={<div>销量排行</div>}
                   dataSource={data}
-                  renderItem={(item,index)=> (
+                  renderItem={(item, index) => (
                       <List.Item>
-                        <Badge count={index+1} style={index<3?{backgroundColor: '#314659'}:{backgroundColor: 'transparent',color:'#314659'}}/>
+                        <Badge count={index + 1}
+                               style={index < 3 ? {backgroundColor: '#314659'}
+                                   : {
+                                     backgroundColor: 'transparent',
+                                     color: '#314659'
+                                   }}/>
                         {item}
                       </List.Item>
                   )}
@@ -166,21 +189,20 @@ const Detailed=()=>{
   return (
       <div className="detailed-chart">
         <Card>
-          <Tabs defaultActiveKey="1"
-                tabBarExtraContent={timeSelection}>
-            <TabPane tab="销售额" key="1">
-              <DetailedChart/>
-            </TabPane>
-            <TabPane tab="访问量" key="2">
-              <DetailedChart/>
-            </TabPane>
-          </Tabs>
+          <Skeleton active loading={false} paragraph={{rows: 8}}>
+            <Tabs defaultActiveKey="1"
+                  tabBarExtraContent={timeSelection}>
+              <TabPane tab="销售额" key="1">
+                <DetailedChart/>
+              </TabPane>
+              <TabPane tab="访问量" key="2">
+                <DetailedChart/>
+              </TabPane>
+            </Tabs>
+          </Skeleton>
         </Card>
       </div>
   )
 }
-
-
-
 
 export default Detailed

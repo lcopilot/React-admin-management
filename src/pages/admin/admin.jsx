@@ -87,20 +87,20 @@ const Admin = (props) => {
               </Route>
               <Redirect to="/home"/>
             </Switch>
+            <Footer>
+              <div className="footer">
+                <div>
+                  <a href="https://github.com/liumuge">MuGe</a>
+                  <a href="https://github.com/liumuge/SmallProfitMall">
+                    <GithubOutlined/>
+                  </a>
+                  <a href="https://github.com/fhx210114">FF</a>
+                </div>
+                <div>A world that knows nothing will surprise you if you go on
+                </div>
+              </div>
+            </Footer>
           </Content>
-          <Footer>
-            <div className="footer">
-              <div>
-                <a href="https://github.com/liumuge">MuGe</a>
-                <a href="https://github.com/liumuge/SmallProfitMall">
-                  <GithubOutlined/>
-                </a>
-                <a href="https://github.com/fhx210114">FF</a>
-              </div>
-              <div>A world that knows nothing will surprise you if you go on
-              </div>
-            </div>
-          </Footer>
         </Layout>
       </Layout>
   )
