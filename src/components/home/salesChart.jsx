@@ -1,7 +1,11 @@
 import {Radio , Card, Col, Row, Table} from "antd";
 import React, {useState} from "react";
 import './salesChart.less'
-import {EllipsisOutlined} from '@ant-design/icons'
+import {
+  CaretDownOutlined,
+  CaretUpOutlined,
+  EllipsisOutlined
+} from '@ant-design/icons'
 import {
   Axis,
   Chart,
@@ -9,14 +13,13 @@ import {
   Geom,
   Guide,
   Label,
-  Legend,
+  Legend, Tooltip as BTooltip,
   Tooltip
 } from "bizcharts";
 import DataSet from "@antv/data-set";
+import InfoCircleOutlined from "@ant-design/icons/lib/icons/InfoCircleOutlined";
 const SalesChart = () => {
 
-  const [count,setCount]=useState(12)
-  const [index,setIndex]=useState(1)
 
   const data = [
     {
@@ -81,7 +84,6 @@ const SalesChart = () => {
   }
 
   const { DataView } = DataSet;
-  const { Html } = Guide;
   const data1 = [
     {
       item: "事例一",
@@ -124,14 +126,119 @@ const SalesChart = () => {
       }
     }
   };
+  let data2 = [
+    {
+      year: "1986",
+      ACME: 162,
 
-  const onChart=(e)=>{
-    if (e.data){
-      setCount(e.data.point.count)
-      setIndex(data1.indexOf(e.data.point.item))
+    },
+    {
+      year: "1987",
+      ACME: 134,
+
+    },
+    {
+      year: "1988",
+      ACME: 116,
+
+    },
+    {
+      year: "1989",
+      ACME: 122,
+
+    },
+    {
+      year: "1990",
+      ACME: 178,
+
+    },
+    {
+      year: "1991",
+      ACME: 144,
+
+    },
+    {
+      year: "1992",
+      ACME: 125,
+
+    },
+    {
+      year: "1993",
+      ACME: 176,
+    },
+    {
+      year: "1994",
+      ACME: 156
+    },
+    {
+      year: "1995",
+      ACME: 195
+    },
+    {
+      year: "1996",
+      ACME: 215
+    },
+    {
+      year: "1997",
+      ACME: 176,
+
+    },
+    {
+      year: "1998",
+      ACME: 167,
+
+    },
+    {
+      year: "1999",
+      ACME: 142
+    },
+    {
+      year: "2000",
+      ACME: 117
+    },
+    {
+      year: "2001",
+      ACME: 113,
+
+    },
+    {
+      year: "2002",
+      ACME: 132
+    },
+    {
+      year: "2003",
+      ACME: 146,
+
+    },
+    {
+      year: "2004",
+      ACME: 169,
+
+    },
+    {
+      year: "2005",
+      ACME: 184,
+
     }
-  }
-
+  ];
+  let dv2 = new DataSet.View().source(data2);
+  dv2.transform({
+    type: "fold",
+    fields: ["ACME", "Compitor"],
+    key: "type",
+    value: "value"
+  });
+  const scale = {
+    value: {
+      alias: "The Share Price in Dollars",
+      formatter: function(val) {
+        return "$" + val;
+      }
+    },
+    year: {
+      range: [0, 1]
+    }
+  };
   const proportionRa=(<Radio.Group onChange={onChange} defaultValue="a">
     <Radio.Button value="a">全部渠道</Radio.Button>
     <Radio.Button value="b">Shanghai</Radio.Button>
@@ -142,12 +249,94 @@ const SalesChart = () => {
         <Row gutter={20}>
           <Col xs={24} sm={24} md={24} lg={12} xl={12}>
             <Card title="线上热门搜索" className="sales-chart-search" extra={<EllipsisOutlined />}>
-              <Row>
-                <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                  sdf
+              <Row gutter={[68,0]}>
+                <Col xs={24} sm={12} md={12} lg={12} xl={12} className="sales-chart-search-user">
+                    <div>
+                        <div className="sales-chart-search-user-title">
+                          <span>
+                            搜索用户数
+                          </span>
+                          <InfoCircleOutlined />
+                        </div>
+                        <div className="sales-chart-search-user-count">
+                          <span>
+                            1234
+                          </span>
+                          <span>
+                             12
+                          </span>
+                          {React.createElement(
+                              true ? CaretUpOutlined : CaretDownOutlined)}
+                        </div>
+                    </div>
+                    <Chart
+                        data={dv2}
+                        padding={"auto"}
+                        scale={scale}
+                        height={70}  forceFit={true}
+                    >
+
+                      <Tooltip showTitle={false}
+                               itemTpl='<li data-index={index}>
+                  <span style="background-color:{color};width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px;"></span>
+                  <span style="padding-right: 1rem;">{title}</span>{value}</li>'
+                               crosshairs={{
+                                 type: 'rect' || 'x' || 'y' || 'cross'
+                               }} />
+
+                      <Geom type="area" position="year*value" color="type" shape="smooth"/>
+                      <Geom
+                          type="line"
+                          position="year*value"
+                          color="type"
+                          shape="smooth"
+                          size={2}
+                      />
+                    </Chart>
                 </Col>
-                <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                  sdfs
+                <Col xs={24} sm={12} md={12} lg={12} xl={12} className="sales-chart-search-user">
+                  <div>
+                    <div className="sales-chart-search-user-title">
+                          <span>
+                            人均搜索次数
+                          </span>
+                      <InfoCircleOutlined />
+                    </div>
+                    <div className="sales-chart-search-user-count">
+                          <span>
+                            2.7
+                          </span>
+                      <span>
+                             26.2
+                          </span>
+                      {React.createElement(
+                          true ? CaretUpOutlined : CaretDownOutlined)}
+                    </div>
+                  </div>
+                  <Chart
+                      data={dv2}
+                      padding={"auto"}
+                      scale={scale}
+                      height={70}  forceFit={true}
+                  >
+
+                    <Tooltip showTitle={false}
+                             itemTpl='<li data-index={index}>
+                  <span style="background-color:{color};width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px;"></span>
+                  <span style="padding-right: 1rem;">{title}</span>{value}</li>'
+                             crosshairs={{
+                               type: 'rect' || 'x' || 'y' || 'cross'
+                             }} />
+
+                    <Geom type="area" position="year*value" color="type" shape="smooth"/>
+                    <Geom
+                        type="line"
+                        position="year*value"
+                        color="type"
+                        shape="smooth"
+                        size={2}
+                    />
+                  </Chart>
                 </Col>
               </Row>
               <div>
@@ -159,27 +348,19 @@ const SalesChart = () => {
             <Card title='销售额类别占比' className="sales-chart-proportion" extra={proportionRa}>
               <div>
                 <Chart
-                    onClick={onChart}
-                    onGetG2Instance={chart => {
-                      chart.on('afterrender', e => {
-                        const geom = chart.get('geoms')[0]; // 获取所有的图形
-                        const items = geom.get('data'); // 获取图形对应的数据
-                        geom.setSelected(items[index]);
-                      });
-                    }}
                     data={dv}
                     scale={cols}
-                    height={400} forceFit={true}
+                    height={500} forceFit={true}
                     padding={"auto"}
                 >
-                  <Coord  type={"theta"} radius={0.75} innerRadius={0.7} />
+                  <Coord  type={"theta"} radius={0.75} innerRadius={0.68} />
                   <Axis name="percent" />
                   <Legend
                       itemTpl={'<li class="g2-legend-list-item item-{index} {checked}" data-color="{originColor}" data-value="{originValue}" style="cursor: pointer;font-size: 14px;">'
                       + '<i class="g2-legend-marker" style="width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:10px;background-color: {color};"></i>'
                       + '<span class="g2-legend-text">{value}</span>'
                       + '</li>'}
-                      position="right-center"
+                      position="right"
                   />
                   <Tooltip
                       showTitle={false}
@@ -189,7 +370,7 @@ const SalesChart = () => {
                   <Guide.Text
                       top
                       position={['50%', '50%']}
-                      content={count}
+                      content='总销量200'
                       style={{ textAlign: 'center', fontSize: 24 }}
                   />
                 </Guide>
@@ -225,7 +406,6 @@ const SalesChart = () => {
           </Col>
         </Row>
       </div>
-
   )
 }
 
