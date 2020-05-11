@@ -10,16 +10,10 @@ import {
   Redirect,
   useHistory
 } from 'react-router-dom'
-import Product from "../product/product";
-import Category from "../category/category";
-import User from "../user/user";
-import Role from "../role/role";
-import Home from "../home/home";
-import Monitor from "../dashboard/monitor";
-import Analysis from "../dashboard/analysis";
-import Order from "../order/order";
+import routerList from '../../config/routerConfig'
 
 import {connect} from 'react-redux'
+import menuList from "../../config/menuConfig";
 
 export const CountContext = createContext();
 const {Footer, Sider, Content} = Layout;
@@ -42,12 +36,35 @@ const Admin = (props) => {
     setCollapsed(false)
   }
 
+  const routerAuth=(menuList)=>{
+    const menus=user.role.menus
+    return (
+        <Switch> {/*只匹配其中一个*/}
+          {
+            menuList.map(item=>{
+              if (menus.indexOf(item.path)!==-1 || user.username==='admin'){
+                return (
+                      <Route path={item.path}>
+                        {item.component}
+                      </Route>
+                )
+              }
+            })
+          }
+          <Redirect to="/home"/>
+        </Switch>
+    )
+
+
+  }
+
   useEffect(() => {
     window.addEventListener('resize', collapsedNav)
     return () => {
       window.removeEventListener('resize', collapsedNav)
     }
   })
+
 
   return (
       <Layout className="admin">
@@ -60,33 +77,7 @@ const Admin = (props) => {
             <HeaderNav/>
           </CountContext.Provider>
           <Content className="Content">
-            <Switch> {/*只匹配其中一个*/}
-              <Route path='/home'>
-                <Home/>
-              </Route>
-              <Route path='/products/category'>
-                <Category/>
-              </Route>
-              <Route path='/products/product'>
-                <Product/>
-              </Route>
-              <Route path='/role'>
-                <Role/>
-              </Route>
-              <Route path='/user'>
-                <User/>
-              </Route>
-              <Route path='/dashboard/analysis'>
-                <Analysis/>
-              </Route>
-              <Route path='/dashboard/monitor'>
-                <Monitor/>
-              </Route>
-              <Route path='/order'>
-                <Order/>
-              </Route>
-              <Redirect to="/home"/>
-            </Switch>
+            {routerAuth(routerList)}
             <Footer>
               <div className="footer">
                 <div>

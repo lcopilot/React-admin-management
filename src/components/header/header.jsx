@@ -180,7 +180,6 @@ const HeaderNav = (props) => {
               <span>{weather.now.tmp}℃</span>
             </Tooltip>
           </div>
-
           <div className="header-nowDate">
             <NowDate/>
           </div>
