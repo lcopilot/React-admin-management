@@ -13,7 +13,7 @@ import {
 import routerList from '../../config/routerConfig'
 
 import {connect} from 'react-redux'
-import menuList from "../../config/menuConfig";
+
 
 export const CountContext = createContext();
 const {Footer, Sider, Content} = Layout;
@@ -42,7 +42,7 @@ const Admin = (props) => {
         <Switch> {/*只匹配其中一个*/}
           {
             menuList.map(item=>{
-              if (menus.indexOf(item.path)!==-1 || user.username==='admin'){
+              if (menus.indexOf(item.path)!==-1 || user.username==='admin' || item.isPublic){
                 return (
                       <Route path={item.path}>
                         {item.component}

@@ -14,6 +14,12 @@ export default (state=defaultState,action)=>{
                    $set:action.data
                 }
             })
+        case actionTypes.SET_USER_AUTH:
+            return update(state, {
+                userAuth:{
+                   $set:action.data
+                }
+            })
         default:
             return state
     }

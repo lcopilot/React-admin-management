@@ -12,7 +12,7 @@ const menuList = [
     title: '首页', // 菜单标题名称
     key: '/home', // 对应的path
     icon: <HomeOutlined/>, // 图标名称
-    disabled:true, //是否是公开页面
+    disabled:true, //是否禁用
     isPublic: true, // 公开的
   },
   {

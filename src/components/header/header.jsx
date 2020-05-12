@@ -37,7 +37,6 @@ const HeaderNav = (props) => {
   const history = useHistory();
   const {collapsed, setCollapsed} = useContext(CountContext);
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [collapsedLNav, setCollapsedLNav] = useState(true)
   const [bell, setBell] = useState({notice: 10, message: 5, commission: 9})
   const [weather, setWeather] = useState(
       {
@@ -70,7 +69,6 @@ const HeaderNav = (props) => {
         history.replace("/login");
       },
     });
-
   };
   //获取天气
   const getWeather = () => {

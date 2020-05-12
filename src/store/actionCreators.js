@@ -6,6 +6,10 @@ export const setUser=(data)=>({
     type:actionTypes.SET_USER,
     data
 })
+export const setUserAuth=(data)=>({
+    type:actionTypes.SET_USER_AUTH,
+    data
+})
 
 
 

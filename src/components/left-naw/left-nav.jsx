@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import './left-nav.less'
 import {Menu} from "antd";
 import {Link} from 'react-router-dom'
@@ -107,24 +107,15 @@ const LeftNav = (props) => {
     const key = item.key
     const menus=user.role.menus
     const username=user.username
-    if(menus.indexOf(key)!==-1 || username==='admin'){
+    if(menus.indexOf(key)!==-1 || username==='admin' || item.isPublic){
       return true
     }
     return false
   }
   // useEffect(()=>{
-  //   setMenuNodes(getMenuNodes(menuList))
+  //
   // })
-  storageUtils.saveUser({
-    "_id": "5e9e8789a5bde93240ccebc9",
-    "username": "admin",
-    "password": "21232f297a57a5a743894a0e4a801fc3",
-    "create_time": 1587447689446,
-    "__v": 0,
-    "role": {
-      "menus": ["/home","/dashboard"]
-    }
-  })
+
   const menuNodes = getMenuNodes(menuList)
 
   return (

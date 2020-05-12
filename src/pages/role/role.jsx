@@ -8,28 +8,35 @@ import {
   Col,
   Table,
   Modal,
-  Tree, Form
+  Tree, Form, Menu
 } from "antd";
 import './role.less'
 import *as indexAPI from '../../api/page/index'
 import UserOutlined from "@ant-design/icons/lib/icons/UserOutlined";
 import menuList from "../../config/menuConfig";
 import moment from "moment";
+import {connect} from "react-redux";
+
+import * as ActionCreators from "../../store/actionCreators";
+import {
+  PAGINATION,
+  TIME_FORMAT
+} from "../../config/sysConfig";
 
 const {Search} = Input;
 
-const Role = () => {
-
+const Role = (props) => {
+  let {user,userAuth,setUserAuth} = props
   const [roles, setRoles] = useState([])
   const [roleVisible, setRoleVisible] = useState(false)
   const [roleInput, setRoleInput] = useState(false)
   const [form] = Form.useForm();
-  const [checkedKeys, setCheckedKeys] = useState(['/home']);
+  const [checkedKeys, setCheckedKeys] = useState([]);
+  const [checkedKeysResult, setCheckedKeysResult] = useState([]);
 
-
-  const onCheck = checkedKeys => {
-    console.log('onCheck', checkedKeys);
+  const onCheck = (checkedKeys, info) => {
     setCheckedKeys(checkedKeys);
+    setCheckedKeysResult([...checkedKeys, ...info.halfCheckedKeys]);
   };
 
   const columns = [
@@ -39,13 +46,17 @@ const Role = () => {
     }, {
       title: '创建时间',
       dataIndex: 'create_time',
-      render:(create_time)=>moment(create_time).format('YYYY-MM-DD  HH:mm:ss')
+      render: (create_time) => moment(create_time).format(
+          TIME_FORMAT)
     }, {
-      title: '授权时间',
+      title: '创建人',
+      dataIndex: 'auth_name'
+    }, {
+      title: '上次授权时间',
       dataIndex: 'auth_time',
-      render:(auth_time)=>moment(auth_time).format('YYYY-MM-DD  HH:mm:ss')
+      render: (auth_time) => moment(auth_time).format(TIME_FORMAT)
     }, {
-      title: '授权人',
+      title: '上次授权人',
       dataIndex: 'auth_name'
     },
     {
@@ -55,10 +66,12 @@ const Role = () => {
       render: (role) => {
         return (
             <>
-              <a  onClick={()=>{
+              <a onClick={() => {
                 editAuthority(role)
               }}>编辑权限</a>
-              <a  onClick={()=>{deleteRole(role)}}>删除</a>
+              <a onClick={() => {
+                deleteRole(role)
+              }}>删除</a>
             </>
         )
       },
@@ -66,9 +79,9 @@ const Role = () => {
   ]
 
   const editAuthority = (role) => {
-    const {menus,name}=role
+    const {menus, name} = role
     form.setFieldsValue({
-      roleName:name
+      roleName: name
     })
     setRoleInput(true)
     setRoleVisible(true)
@@ -85,14 +98,39 @@ const Role = () => {
       }
     })
   }
+//添加角色
   const addRole = () => {
+    console.log(checkedKeysResult)
     form.validateFields().then(values => {
       console.log(values)
       form.resetFields();
     })
   }
+  //获取用户所拥有的权限
+  const getUserAuth = (menuList) => {
+    const menus = user.role.menus
+    const username=user.username
+    let checkedKeyList=[];
+    return menuList.reduce((pre, item) => {
+      if (menus.indexOf(item.key) !== -1 || username==='admin' || item.isPublic) {
+        if (item.isPublic && item.disabled){
+          checkedKeyList.push(item.key)
+        }
+        if (!item.children) {
+          pre.push(item)
+        } else {
+          pre.push(item)
+          item.children=getUserAuth(item.children)
+        }
+      }
+      setCheckedKeys(checkedKeyList)
+      return pre
+    }, [])
+
+  }
 
   useEffect(() => {
+    setUserAuth(getUserAuth(menuList))
     getRoles();
     return () => {
     }
@@ -124,7 +162,7 @@ const Role = () => {
               rowKey={(item) => item._id}
               dataSource={roles}
               columns={columns}
-              pagination={{defaultPageSize: 3}}
+              pagination={{defaultPageSize: PAGINATION.PAGE_SIZE,total:roles.length,showTotal:PAGINATION.SHOW_TOTAL,showSizeChanger:true,showQuickJumper:true,pageSizeOptions:PAGINATION.PAGE_SIZE_OPTIONS}}
           />
           <Modal
               getContainer={false}
@@ -167,7 +205,7 @@ const Role = () => {
                     onCheck={onCheck}
                     checkedKeys={checkedKeys}
                     showIcon
-                    treeData={menuList}
+                    treeData={userAuth}
                 />
               </Form.Item>
             </Form>
@@ -177,4 +215,18 @@ const Role = () => {
   )
 }
 
-export default Role
+const stateToProps = (state) => {
+  return {
+    user: state.user,
+    userAuth:state.userAuth,
+  }
+}
+const dispatchToProps = (dispatch) => {
+  return {
+    setUserAuth(data) {
+      dispatch(ActionCreators.setUserAuth(data))
+    }
+  }
+}
+
+export default connect(stateToProps, dispatchToProps)(Role)
