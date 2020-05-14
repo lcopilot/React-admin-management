@@ -172,7 +172,7 @@ const HeaderNav = (props) => {
         <div className="header-index-right">
           <div className="header-weather">
             <Tooltip placement="bottom" title={<>地点<span
-                style={{marginLeft: '4rem'}}>{weather.basic.city}</span> <br/>更新时间<span
+                style={{marginLeft: '5rem'}}>{weather.basic.city}</span> <br/>更新时间<span
                 style={{marginLeft: '2rem'}}> {weather.basic.update.loc}</span><br/>数据由京东万象提供每小时更新一次</>}>
               <span>{weather.now.cond.txt} </span>
               <span>{weather.now.tmp}℃</span>

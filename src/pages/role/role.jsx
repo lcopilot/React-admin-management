@@ -171,6 +171,7 @@ const Role = (props) => {
               onOk={addRole}
               onCancel={() => {
                 setRoleVisible(false);
+                setRoleInput(false)
                 form.resetFields();
               }}
           >

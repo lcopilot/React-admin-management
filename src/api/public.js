@@ -73,7 +73,7 @@ axios.interceptors.response.use(
 //封装请求方法 此方法耦合度很低 适用于业务中绝大部分
 export default {
   /**
-   * Promise有三种状态
+   * Promise 三种状态
    * pending: 等待中，或者进行中，表示还没有得到结果
    * resolved: 已经完成，表示得到了我们想要的结果，可以继续往下执行
    * rejected: 也表示得到结果，但是由于结果并非我们所愿，因此拒绝执(用catch捕获异常)
@@ -116,6 +116,27 @@ export default {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',  //请求头添加表单头
         },
+      }).then(res => {
+        resolve(res.data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  /**
+   * post请求(文件)
+   * @param url
+   * @param data
+   * @param uploadProgress function (progress)=>{}获取上传进度   progress.loaded:已上传文件大小  progress.total:被上传文件的总大小
+   * @returns {Promise<unknown>}
+   */
+  requestPostFile (url, data = {},uploadProgress) {
+    return new Promise((resolve, reject) => {
+      axios.post(url, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',  //请求头添加文件上传的表单头
+        },
+        onUploadProgress:uploadProgress
       }).then(res => {
         resolve(res.data)
       }).catch(error => {
